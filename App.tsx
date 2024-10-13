@@ -1,6 +1,8 @@
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts, NunitoSans_400Regular, NunitoSans_700Bold } from '@expo-google-fonts/nunito-sans';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+
+import { HomePage } from '@screens/home';
 
 export default function App() {
   // Hooks
@@ -14,7 +16,7 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       {fontsLoaded ? (
-        <Text>Hello World!</Text>
+        <HomePage />
       ) : (
         <ActivityIndicator size="large" color="#0000ff" />
       )}
