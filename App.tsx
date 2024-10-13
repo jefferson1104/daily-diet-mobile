@@ -23,7 +23,7 @@ export default function App() {
         barStyle='dark-content'
         translucent
       />
-      {!fontsLoaded ? <HomePage /> : <Loading />}
+      {fontsLoaded ? <HomePage /> : <Loading />}
     </ThemeProvider>
   );
 }
