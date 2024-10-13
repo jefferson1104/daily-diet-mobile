@@ -1,11 +1,9 @@
-import { View, Text } from "react-native";
-
-import { styles } from "./styles";
+import { Container, Title } from "./styles";
 
 export function HomePage() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hello World!</Text>
-    </View>
+    <Container>
+      <Title>Hello World!</Title>
+    </Container>
   );
 }

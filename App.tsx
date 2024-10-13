@@ -1,8 +1,11 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { ThemeProvider } from 'styled-components/native';
 import { useFonts, NunitoSans_400Regular, NunitoSans_700Bold } from '@expo-google-fonts/nunito-sans';
 
 import { HomePage } from '@screens/home';
+
+import theme from './src/theme';
 
 export default function App() {
   // Hooks
@@ -13,14 +16,16 @@ export default function App() {
 
   // Renders
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      {fontsLoaded ? (
-        <HomePage />
-      ) : (
-        <ActivityIndicator size="large" color="#0000ff" />
-      )}
-    </View>
+    <ThemeProvider theme={theme}>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        {fontsLoaded ? (
+          <HomePage />
+        ) : (
+          <ActivityIndicator size="large" color="#0000ff" />
+        )}
+      </View>
+    </ThemeProvider>
   );
 }
 
