@@ -1,12 +1,14 @@
 import { Header } from "@components/Header";
 
-import { Container, Title } from "./styles";
+import { Container } from "./styles";
+import { Typography } from "@components/Typography";
 
 export function HomePage() {
   return (
     <Container>
       <Header />
-      <Title>Hello World!</Title>
+      <Typography>Hello World!</Typography>
+      <Typography fontFamily="bold">Hello World!</Typography>
     </Container>
   );
 }
