@@ -1,14 +1,20 @@
 import { Header } from "@components/Header";
 
+import { Card } from "@components/Card";
+
 import { Container } from "./styles";
-import { Typography } from "@components/Typography";
 
 export function HomePage() {
   return (
     <Container>
       <Header />
-      <Typography>Hello World!</Typography>
-      <Typography fontFamily="bold">Hello World!</Typography>
+      <Card
+        title="90,86%"
+        subtitle="of meals within the diet"
+        background="green"
+        iconPosition="right"
+        onPress={() => console.log('Card clicked')}
+      />
     </Container>
   );
 }
