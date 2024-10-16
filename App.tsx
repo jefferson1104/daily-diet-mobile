@@ -7,6 +7,7 @@ import { HomePage } from '@screens/home';
 import { Loading } from '@components/Loading';
 
 import theme from './src/theme';
+import { StatisticsPage } from '@screens/statistics';
 
 export default function App() {
   // Hooks
@@ -23,7 +24,7 @@ export default function App() {
         barStyle='dark-content'
         translucent
       />
-      {fontsLoaded ? <HomePage /> : <Loading />}
+      {fontsLoaded ? <StatisticsPage /> : <Loading />}
     </ThemeProvider>
   );
 }
