@@ -4,11 +4,11 @@ import { useTheme } from 'styled-components/native'
 import { Container, TextInput } from './styles'
 import { dateMask, hourMask } from '@utils/mask'
 
-type InputProps = TextInputProps & {
-	mask?: 'date' | 'hour'
-	onInputMaksChange?: (text: string) => void
-	label: string
-}
+interface InputProps extends TextInputProps {
+	mask?: 'date' | 'hour';
+	onInputMaksChange?: (text: string) => void;
+	label: string;
+};
 
 export function Input({
 	label,
@@ -16,17 +16,18 @@ export function Input({
 	onInputMaksChange,
 	...props
 }: InputProps) {
-	const { colors } = useTheme()
+	// Hooks
+	const { colors } = useTheme();
 
+	// Methods
 	function handleChange(text: string) {
 		onInputMaksChange &&
 			mask === 'date' &&
 			onInputMaksChange(dateMask(text))
-		onInputMaksChange &&
-			mask === 'hour' &&
-			onInputMaksChange(hourMask(text))
+		onInputMaksChange && mask === 'hour' && onInputMaksChange(hourMask(text))
 	}
 
+	// Renders
 	return (
 		<Container style={props.style}>
 			<Typography
