@@ -1,44 +1,103 @@
-import { View, SectionList } from "react-native";
-import { Plus } from "phosphor-react-native";
+import { useState, useCallback } from 'react';
+import { SectionList, View } from 'react-native';
+import { Plus } from 'phosphor-react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-import { Header } from "@components/Header";
-import { Card } from "@components/Card";
-import { Typography } from "@components/Typography";
-import { Button } from "@components/Button";
-import { Meal } from "@components/Meal";
+import { Meal } from '@components/Meal';
+import { Card } from '@components/Card';
+import { Button } from '@components/Button';
+import { Header } from '@components/Header';
+import { Typography } from '@components/Typography';
 
-import { Container } from "./styles";
+import { mealsGetAll } from '@storage/meal/mealGetAll';
 
-export function HomePage() {
-  // Constants
-  const meals = [
-    {
-      title: '12.08.24',
-      data: [
-        { id: '1', hour: '12:00', description: 'X-Salad', isOnTheDiet: true },
-        { id: '2', hour: '19:00', description: 'Cesar Salad', isOnTheDiet: true },
-      ],
-    },
-    {
-      title: '13.08.24',
-      data: [
-        { id: '2', hour: '10:00', description: 'X-Bacon', isOnTheDiet: false },
-      ],
-    },
-  ];
+import { MealDTO } from '@dtos/MealDTO';
+
+import { statsSorter } from '@utils/statistics';
+import { mealsList } from '@utils/lists';
+
+import { Container } from './styles';
+
+interface Meals {
+  date: string;
+  data: MealDTO[];
+};
+
+interface Statistic {
+  percentage: string;
+  isMealsOnTheDiet: boolean;
+};
+
+export function HomeScreen() {
+  // Hooks
+  const navigation = useNavigation();
+
+  // States
+  const [meals, setMeals] = useState<Meals[]>([]);
+  const [statistic, setStatistic] = useState<Statistic>();
+
+  // Methods
+  function handleGoStatistic() {
+		navigation.navigate('statistic');
+	};
+
+  function handleGoRegisterNewMeal() {
+		navigation.navigate('register')
+	};
+
+  function handleGoMeal(id: string) {
+		navigation.navigate('meal', { id })
+	};
+
+  async function fetchMeals() {
+		try {
+			const data = await mealsGetAll()
+
+			// fetching sorted meals
+			const meals = mealsList(data)
+
+			const { percentage, mealsOnTheDiet, mealsOutOnDiet } =
+				statsSorter(data)
+
+			const isMealsOnTheDiet =
+				mealsOnTheDiet >= mealsOutOnDiet ? true : false
+
+			const statistics = {
+				percentage,
+				isMealsOnTheDiet,
+			}
+
+			// Updating the state
+			setStatistic(statistics)
+
+			setMeals(meals)
+		} catch (error) {
+			console.log(error)
+		}
+	};
+
+  // LifeCycles
+  useFocusEffect(
+		useCallback(() => {
+			fetchMeals()
+		}, []),
+	);
 
   // Renders
   return (
     <Container>
       <Header />
 
-      <Card
-        title="90,86%"
-        subtitle="of meals within the diet"
-        background="green"
-        iconPosition="right"
-        onPress={() => console.log('Card clicked')}
-      />
+      {statistic && (
+				<Card
+					title={statistic.percentage}
+					subtitle={`of meals ${
+						statistic.isMealsOnTheDiet ? 'within' : 'outside'
+					} the diet`}
+					background={statistic.isMealsOnTheDiet ? 'green' : 'red'}
+					onPress={handleGoStatistic}
+				/>
+			)}
 
       <View style={{ marginTop: 40 }}>
         <Typography fontSize="title_sm" style={{ marginBottom: 8 }}>
@@ -48,8 +107,8 @@ export function HomePage() {
         <Button
           title="Add Meal"
           icon={<Plus size={18} color="white" />}
-          type="solid"
-          onPress={() => console.log('Button clicked')}
+          activeOpacity={0.5}
+          onPress={handleGoRegisterNewMeal}
         />
       </View>
 
@@ -57,22 +116,27 @@ export function HomePage() {
         sections={meals}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        renderSectionHeader={({ section: { title } }) => (
-          <Typography fontSize="title_sm" fontFamily="bold" color="gray_1" style={{ marginVertical: 16 }}>
-            {title}
-          </Typography>
+        renderSectionHeader={({ section: { date } }) => (
+          <Typography
+						fontSize="title_sm"
+						fontFamily="bold"
+						color="gray_1"
+						style={{ marginBottom: 8, marginTop: 32 }}
+					>
+						{date}
+					</Typography>
         )}
         renderItem={({ item }) => (
           <Meal
             key={item.id}
             id={item.id}
             hour={item.hour}
-            description={item.description}
+            description={item.name}
             isOnTheDiet={item.isOnTheDiet}
-            onPress={() => console.log('Meal clicked')}
+            onPress={() => handleGoMeal(item.id)}
           />
         )}
-        style={{ marginBottom: 32 }}
+        style={{ marginVertical: 32 }}
         contentContainerStyle={
           meals.length === 0 && {
             flex: 1,
@@ -86,7 +150,7 @@ export function HomePage() {
               No meals registered yet
             </Typography>
             <Typography>
-              lets start by adding a new meal
+              lets start by adding a new meal?
             </Typography>
           </>
         )}

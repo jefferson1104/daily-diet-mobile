@@ -26,20 +26,20 @@ export function Modal({ modalVisible = false, setModalVisible, onAction }: Modal
 						fontFamily="bold"
 						textAlign="center"
 					>
-						Deseja realmente excluir o registro da refeição?
+						Do you really want to delete the meal record?
 					</Typography>
 
 					<Row>
 						<Button
 							type="outline"
-							title="Cancelar"
+							title="Cancel"
 							onPress={() => setModalVisible(!modalVisible)}
 							style={{ width: '48%' }}
 						/>
 
 						<Button
 							type="solid"
-							title="Sim, excluir"
+							title="Yes, delete"
 							onPress={onAction}
 							style={{ width: '48%' }}
 						/>
